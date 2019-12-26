@@ -1,0 +1,13 @@
+<Ifmodule mod_rewrite.c>
+RewriteEngine On
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.+)/$ $1 [L,R=301]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ index.php/$1 [L]
+</Ifmodule>
+
+<Ifmodule !mod_rewrite.c>
+    ErrorDocument 404 /index.php
+</Ifmodule>
