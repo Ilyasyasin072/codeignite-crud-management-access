@@ -71,4 +71,69 @@ class Admin extends CI_Controller
             <div class="alert alert-success" role="alert">
             Access Changed! </div>');
     }
+
+        public function registrationAdmin()
+    {
+        //rules
+        $this->form_validation->set_rules('name', 'Name', 'required|trim');
+        $this->form_validation->set_rules(
+            'email',
+            'Email',
+            'required|trim|valid_email|is_unique[tb_user.email]'
+        );
+        $this->form_validation->set_rules(
+            'password1',
+            'Password',
+            'required|trim|min_length[3]|matches[password2]',
+            [
+                'matches' => 'password dont matches',
+                'min_length' => 'password to short!'
+            ]
+        );
+        $this->form_validation->set_rules(
+            'password2',
+            'Password',
+            'required|trim|matches[password1]'
+        );
+        // untuk form validasi
+        if ($this->form_validation->run() == false) {
+            $data['title'] = 'Registration';
+            $data['tb_user'] = $this->db->get_where('tb_user', ['email' => $this->session->userdata('email')])->row_array();
+            //echo "welcome user&nbsp;" . $data['tb_user']['name'];
+            $data['title'] = 'Dashboard';
+            $this->load->view('templates/header', $data);
+            $this->load->view('templates/sidebar', $data);
+            $this->load->view('templates/topbar', $data);
+            $this->load->view('admin/registration-admin', $data);
+            $this->load->view('templates/footer');
+        } else {
+            $data = [
+                'name' => htmlspecialchars($this->input->post('name', true)),
+                'email' => htmlspecialchars($this->input->post('email', true)),
+                'image' => 'default.jpg',
+                'password' => password_hash($this->input->post('password1'), PASSWORD_DEFAULT),
+                'role_id' => 1,
+                'is_active' => 1
+            ];
+            $this->db->insert('tb_user', $data);
+            //session alert after registration
+            $this->session->set_flashdata('massage', '
+            <div class="alert alert-success" role="alert">
+            Account New Admin has been created! </div>');
+            redirect('admin/registrationAdmin');
+        }
+    }
+
+    public function showuser()
+    {
+        $data['tb_user'] = $this->db->get_where('tb_user', ['email' => $this->session->userdata('email')])->row_array();
+
+        $data['user'] = $this->db->get('tb_user')->result_array();
+        $data['title'] = 'Manage User';
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('templates/topbar', $data);
+        $this->load->view('admin/show-user', $data);
+        $this->load->view('templates/footer');
+    }
 }
