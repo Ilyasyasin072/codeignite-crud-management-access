@@ -31,7 +31,9 @@
                                                 <td><?= $m['nama_menu']; ?></td>
                                                 <td>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" value="" id="" <?= check_access($tb_user_role['id'], $m['id']); ?>>
+                                                        <input class="form-check-input" type="checkbox" <?= check_access($tb_user_role['id'], $m['id']);?> 
+                                                        data-role="<?=$tb_user_role['id'];?>" 
+                                                        data-menu="<?=$m['id'];?>">
                                                         <label class="form-check-label" for="defaultCheck1">
                                                             Check for Role
                                                         </label>
@@ -49,5 +51,6 @@
             </div>
         </div>
         <!-- /.container-fluid -->
-
         </div>
+
+    

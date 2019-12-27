@@ -53,7 +53,28 @@
 
         <!-- Page level custom scripts -->
         <script src="<?= base_url('assets/'); ?>js/demo/datatables-demo.js"></script>
+        <script type="text/javascript">
 
+          $('.form-check-input').on('click', function(){
+
+            console.log('a');
+            
+            const menuId = $(this).data('menu');
+            const roleId = $(this).data('role');
+
+            $.ajax({
+              url: "<?= base_url('admin/changeaccess');?>",
+              type: "post",
+              data: {
+                menuId: menuId,
+                roleId: roleId
+              },
+              success: function(){
+                document.location.href = "<?= base_url('admin/roleaccess/');?>" + roleId;
+              }
+            })
+          });
+        </script>
 </body>
 
 </html>
