@@ -53,6 +53,11 @@
 
         <!-- Page level custom scripts -->
         <script src="<?= base_url('assets/'); ?>js/demo/datatables-demo.js"></script>
+
+        <script src="https://lipis.github.io/bootstrap-sweetalert/dist/sweetalert.js"></script>
+
+        <link rel="stylesheet" href="https://lipis.github.io/bootstrap-sweetalert/dist/sweetalert.css" />
+
         <script type="text/javascript">
 
           $('.form-check-input').on('click', function(){

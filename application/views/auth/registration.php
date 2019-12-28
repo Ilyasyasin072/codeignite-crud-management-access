@@ -56,7 +56,7 @@
                                     </form>
                                     <hr>
                                     <div class="text-center">
-                                        <a class="small" href="<?= base_url('auth'); ?>">Create an Account!</a>
+                                        <a class="small" href="<?= base_url('auth'); ?>">Back Login</a>
                                     </div>
                                 </div>
                             </div>

@@ -61,7 +61,7 @@ class Auth extends CI_Controller
 			} else {
 				$this->session->set_flashdata('massage', '
 			<div class="alert alert-danger" role="alert">
-			user is not active </div>');
+			Account not activated . Please check email for been activated!! </div>');
 
 				redirect('auth');
 			}
@@ -142,11 +142,13 @@ class Auth extends CI_Controller
 	{
 
 		//send to email untuk aktivasi
+		$email_send = '';
+		$password_send = '';
 		$config = [
 			'protocol' 	=> 'smtp',
 			'smtp_host' => 'ssl://smtp.googlemail.com',
-			'smtp_user' => 'email pengirim',
-			'smtp_pass' => 'password email',
+			'smtp_user' => $email_send,
+			'smtp_pass' => $password_send,
 			'smtp_port' => 465,
 			'meiltype' 	=> 'html',
 			'charset' 	=> 'utf-8',
@@ -156,13 +158,14 @@ class Auth extends CI_Controller
 		$this->load->library('email', $config);
 		$this->email->initialize($config);
 
-		$this->email->from('email pengirim', 'Management Access');
+		$this->email->from($email_send, 'Management Access');
 		$this->email->to($this->input->post('email'));
 
 		if($type == 'verify') {
 
 		$this->email->subject('Account Verification');
-		$this->email->message('click this link to verify account : <a href="'. base_url() . 'auth/verify?email=' . $this->input->post('email'). '&token='. $token .'">Active<a>');
+		$link_verify = '<a href="'. base_url() . 'auth/verify?email=' . $this->input->post('email'). '&token='. urlencode($token) .'">Active</a>';
+		$this->email->message('click this link to verify account ' . $link_verify);
 
 		}
 
@@ -194,7 +197,7 @@ class Auth extends CI_Controller
 
 					$this->session->set_flashdata('massage', '
 					<div class="alert alert-success" role="alert">
-					'.$email.' has been activated pleaste login </div>');
+					'.$email.' has been activated please login!! </div>');
 					
 					redirect('auth');
 				} else {
@@ -234,7 +237,7 @@ class Auth extends CI_Controller
 		$this->session->unset_userdata('role_id');
 		$this->session->set_flashdata('massage', '
 			<div class="alert alert-danger" role="alert">
-			you have been logout </div>');
+			You have been logout </div>');
 		redirect('auth');
 	}
 

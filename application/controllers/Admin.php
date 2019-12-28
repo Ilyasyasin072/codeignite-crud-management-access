@@ -136,4 +136,10 @@ class Admin extends CI_Controller
         $this->load->view('admin/show-user', $data);
         $this->load->view('templates/footer');
     }
+
+    public function delete($id)
+    {
+       $data = $this->db->delete('tb_user', array('id' => $id));
+       echo $data;
+    }
 }
