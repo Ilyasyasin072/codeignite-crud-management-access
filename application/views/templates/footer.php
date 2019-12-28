@@ -54,9 +54,8 @@
         <!-- Page level custom scripts -->
         <script src="<?= base_url('assets/'); ?>js/demo/datatables-demo.js"></script>
 
-        <script src="https://lipis.github.io/bootstrap-sweetalert/dist/sweetalert.js"></script>
-
-        <link rel="stylesheet" href="https://lipis.github.io/bootstrap-sweetalert/dist/sweetalert.css" />
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
         <script type="text/javascript">
 
@@ -80,6 +79,81 @@
             })
           });
         </script>
+
+        <script src="https://lipis.github.io/bootstrap-sweetalert/dist/sweetalert.js"></script>
+
+    <link rel="stylesheet" href="https://lipis.github.io/bootstrap-sweetalert/dist/sweetalert.css" />
+    <script type="text/javascript">
+
+    $(".remove-user").click(function(){
+
+        var id = $(this).parents("tr").attr("id");
+
+    
+
+       swal({
+
+        title: "Are you sure?",
+
+        text: "You will not be able to recover this imaginary file!",
+
+        type: "warning",
+
+        showCancelButton: true,
+
+        confirmButtonClass: "btn-danger",
+
+        confirmButtonText: "Yes, delete it!",
+
+        cancelButtonText: "No, cancel plx!",
+
+        closeOnConfirm: false,
+
+        closeOnCancel: false
+
+      },
+
+      function(isConfirm) {
+
+        if (isConfirm) {
+
+          $.ajax({
+
+             url: 'admin/delete/'+id,
+
+             type: 'DELETE',
+
+             error: function() {
+
+                alert('Something is wrong');
+
+             },
+
+             success: function(data) {
+
+                  $("#"+id).remove();
+
+                  swal("Deleted!", "Your imaginary file has been deleted.", "success");
+
+             }
+
+          });
+
+        } else {
+
+          swal("Cancelled", "Your imaginary file is safe :)", "error");
+
+        }
+
+      });
+
+     
+
+    });
+
+    
+
+</script>
 </body>
 
 </html>

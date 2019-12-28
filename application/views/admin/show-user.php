@@ -39,6 +39,7 @@
                                                 <td>
                                                     <a href="#" class="badge badge-success">Edit</a>
                                                     <a type="submit"  class="badge badge-danger remove-user">Delete</a>
+                                                    <a type="submit"  class="badge badge-danger form-input">Form</a>
                                                 </td>
                                             </tr>
                                             <?php $i++; ?>
@@ -74,74 +75,109 @@
 
         <link rel="stylesheet" href="https://lipis.github.io/bootstrap-sweetalert/dist/sweetalert.css" />
 
+
          <script type="text/javascript">
 
-    $(".remove-user").click(function(){
+            $(".remove-user").click(function(){
 
-        var id = $(this).parents("tr").attr("id");
+                var id = $(this).parents("tr").attr("id");
 
-    
+            
 
-       swal({
+               swal({
 
-        title: "Are you sure?",
+                title: "Are you sure?",
 
-        text: "You will not be able to recover this imaginary file!",
+                text: "You will not be able to recover this imaginary file!",
 
-        type: "warning",
+                type: "warning",
 
-        showCancelButton: true,
+                showCancelButton: true,
 
-        confirmButtonClass: "btn-danger",
+                confirmButtonClass: "btn-danger",
 
-        confirmButtonText: "Yes, delete it!",
+                confirmButtonText: "Yes, delete it!",
 
-        cancelButtonText: "No, cancel plx!",
+                cancelButtonText: "No, cancel plx!",
 
-        closeOnConfirm: false,
+                closeOnConfirm: false,
 
-        closeOnCancel: false
+                closeOnCancel: false
 
-      },
+              },
 
-      function(isConfirm) {
+              function(isConfirm) {
 
-        if (isConfirm) {
+                if (isConfirm) {
 
-          $.ajax({
+                  $.ajax({
 
-             url: "<?= base_url('admin/delete/');?>" + id,
+                     url: "<?= base_url('admin/delete/');?>" + id,
 
-             type: 'DELETE',
+                     type: 'DELETE',
 
-             error: function() {
+                     error: function() {
 
-                alert('Something is wrong');
+                        alert('Something is wrong');
 
-             },
+                     },
 
-             success: function(data) {
+                     success: function(data) {
 
-                  $("#"+id).remove();
+                          $("#"+id).remove();
 
-                  swal("Deleted!", "Your imaginary file has been deleted.", "success");
+                          swal("Deleted!", "Your imaginary file has been deleted.", "success");
 
-             }
+                     }
 
-          });
+                  });
 
-        } else {
+                } else {
 
-          swal("Cancelled", "Your imaginary file is safe :)", "error");
+                  swal("Cancelled", "Your imaginary file is safe :)", "error");
 
-        }
+                }
 
-      });
+              });
 
      
 
     });
 
+    $('.form-input').click(function(){  
+        Swal.fire({
+          title: 'Submit your Github username',
+          input: 'text',
+          inputAttributes: {
+            autocapitalize: 'off'
+          },
+          showCancelButton: true,
+          confirmButtonText: 'Look up',
+          showLoaderOnConfirm: true,
+          preConfirm: (login) => {
+            return fetch(`//api.github.com/users/${login}`)
+              .then(response => {
+                if (!response.ok) {
+                  throw new Error(response.statusText)
+                }
+                return response.json()
+              })
+              .catch(error => {
+                Swal.showValidationMessage(
+                  `Request failed: ${error}`
+                )
+              })
+          },
+          allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+          if (result.value) {
+            Swal.fire({
+              title: `${result.value.login}'s avatar`,
+              imageUrl: result.value.avatar_url
+            })
+          }
+})
+    });
     
 
 </script>
