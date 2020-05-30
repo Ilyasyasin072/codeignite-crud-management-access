@@ -12,4 +12,19 @@ class Menu_model extends CI_Model
 
         return $this->db->query($query)->result_array();
     }
+
+    public function getMenuById($id)
+    {
+        return $this->db->get_where('tb_user_menu', ['id' => $id])->row_array();
+    }
+
+    public function UbahSubMenu()
+    {
+        $data = [
+            "nama_menu" => $this->input->post('nama_menu')
+        ];
+
+        $this->db->get_where('id', $this->input->post('id'));
+        $this->db->update('tb_user_menu', $data);
+    }
 }

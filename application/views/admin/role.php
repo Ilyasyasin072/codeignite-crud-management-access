@@ -37,8 +37,8 @@
                                                 <td>
 
                                                     <a href="<?= base_url('admin/roleaccess/') . $r['id']; ?>" class="badge badge-info">Access</a>
-                                                    <a href="#" class="badge badge-success">Edit</a>
-                                                    <a href="#" class="badge badge-danger">Delete</a>
+                                                    <a href="#" class="badge badge-success"><i class="fas fa-edit"></i></a>
+                                                    <a href="#" class="badge badge-danger remove-user"><i class="fas fa-trash"></i></a>
                                                 </td>
                                             </tr>
                                             <?php $i++; ?>

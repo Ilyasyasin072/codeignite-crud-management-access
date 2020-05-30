@@ -61,7 +61,7 @@ class Admin extends CI_Controller
 
         $result = $this->db->get_where('tb_user_access_menu', $data);
 
-        if($result->num_rows() < 1) {
+        if ($result->num_rows() < 1) {
             $this->db->insert('tb_user_access_menu', $data);
         } else {
             $this->db->delete('tb_user_access_menu', $data);
@@ -72,7 +72,7 @@ class Admin extends CI_Controller
             Access Changed! </div>');
     }
 
-        public function registrationAdmin()
+    public function registrationAdmin()
     {
         //rules
         $this->form_validation->set_rules('name', 'Name', 'required|trim');
@@ -100,7 +100,8 @@ class Admin extends CI_Controller
             $data['title'] = 'Registration';
             $data['tb_user'] = $this->db->get_where('tb_user', ['email' => $this->session->userdata('email')])->row_array();
             //echo "welcome user&nbsp;" . $data['tb_user']['name'];
-            $data['title'] = 'Dashboard';
+            $this->db->where('is_active =', '1');
+            $data['user'] = $this->db->get('tb_user')->result_array();
             $this->load->view('templates/header', $data);
             $this->load->view('templates/sidebar', $data);
             $this->load->view('templates/topbar', $data);
@@ -127,19 +128,30 @@ class Admin extends CI_Controller
     public function showuser()
     {
         $data['tb_user'] = $this->db->get_where('tb_user', ['email' => $this->session->userdata('email')])->row_array();
+        $this->db->where('is_active !=', '1');
 
-        $data['user'] = $this->db->get('tb_user')->result_array();
-        $data['title'] = 'Manage User';
-        $this->load->view('templates/header', $data);
-        $this->load->view('templates/sidebar', $data);
-        $this->load->view('templates/topbar', $data);
-        $this->load->view('admin/show-user', $data);
-        $this->load->view('templates/footer');
+        $this->db->select('*');
+        $this->db->from('tb_user s');
+        $this->db->join('tb_user_role tr', 'tr.id=s.role_id', 'left');
+        $query = $this->db->get();
+        if ($query->num_rows() != 0) {
+            $data['user'] = $query->result_array();
+            $data['title'] = 'Manage User';
+            $this->load->view('templates/header', $data);
+            $this->load->view('templates/sidebar', $data);
+            $this->load->view('templates/topbar', $data);
+            $this->load->view('admin/show-user', $data);
+            $this->load->view('templates/footer');
+        } else {
+            return false;
+        }
     }
 
     public function delete($id)
     {
-       $data = $this->db->delete('tb_user', array('id' => $id));
-       echo $data;
+        $email = $this->input->get('email');
+        $data = $this->db->delete('tb_user', array('id' => $id));
+        $this->db->delete('tb_user_token', ['email' => $email]);
+        echo $data;
     }
 }

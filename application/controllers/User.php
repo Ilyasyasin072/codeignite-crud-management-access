@@ -132,4 +132,43 @@ class User extends CI_Controller
 
         }
     }
+
+    public function postuser()
+    {
+        $data['tb_user'] = $this->db->get_where('tb_user', ['email' => $this->session->userdata('email')])->row_array();
+        //echo "welcome user&nbsp;" . $data['tb_user']['name'];
+        $data['title'] = 'Post';
+
+         if($this->form_validation->run() == false) {
+            $this->load->view('templates/header', $data);
+            $this->load->view('templates/sidebar', $data);
+            $this->load->view('templates/topbar', $data);
+            $this->load->view('users/post_users', $data);
+            $this->load->view('templates/footer');
+        } else {
+        $i = 0;
+        $post = $this->input->post('post');
+        $desc = $this->input->post('desc');
+        $desc2 = $this->input->post('desc2');
+
+        if($post[0] != null) {
+            foreach ($post as $row) {
+                $data = [
+                    'post'=>$row,
+                    'desc'=>$desc[$i],
+                    'desc2'=>$desc2[$i],
+                ];
+
+                $insert = $this->db->insert('tb_post',$data);
+                if($insert) {
+                    $i++;
+                }
+            }
+        }
+        $arr['success'] = true;
+        $arr['notif'] = '<div class="alert alert-success"> Data Berhasil !!</div>';
+        return $this->output->set_output(json_encode($arr));
+    }
+
+    }
 }

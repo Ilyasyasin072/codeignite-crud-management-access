@@ -7,6 +7,7 @@ class Menu extends CI_Controller
     {
         parent::__construct();
         is_logged_in();
+        $this->load->model('Menu_model', 'menu');
     }
 
     public function index()
@@ -15,7 +16,6 @@ class Menu extends CI_Controller
         $data['tb_user'] = $this->db->get_where('tb_user', ['email' => $this->session->userdata('email')])->row_array();
 
         $data['tb_menu'] = $this->db->get('tb_user_menu')->result_array();
-        //echo "welcome user&nbsp;" . $data['tb_user']['name'];
         $this->form_validation->set_rules('menu', 'Menu', 'required');
 
         if ($this->form_validation->run() == false) {
@@ -68,5 +68,40 @@ class Menu extends CI_Controller
 			New Add Sub Menu Management </div>');
             redirect('menu/submenu');
         }
+    }
+
+    public function ubahMenu($id)
+    {
+        $data['title'] = 'Submenu Management';
+        $data['tb_user'] = $this->db->get_where('tb_user', ['email' => $this->session->userdata('email')])->row_array();
+        $data['menu'] = $this->menu->getMenuById($id);
+
+        $this->form_validation->set_rules('title', 'Sub Menu Title', 'required');
+        $this->form_validation->set_rules('menu_id', 'Menu', 'required');
+        $this->form_validation->set_rules('url', 'Url Link', 'required');
+        $this->form_validation->set_rules('icon', 'Icon', 'required');
+
+        if ($this->form_validation->run() == false) {
+            $this->load->view('templates/header', $data);
+            $this->load->view('templates/sidebar', $data);
+            $this->load->view('templates/topbar', $data);
+            $this->load->view('menu/edit-menu', $data);
+            $this->load->view('templates/footer');
+        } else {
+            $data = [
+                'nama_menu' => $this->input->post('nama_menu'),
+            ];
+            $this->menu->UbahSubMenu($data);
+            $this->session->set_flashdata('flash', '
+			<div class="alert alert-success" role="alert">
+			New Add Sub Menu Management </div>');
+            redirect('menu');
+        }
+    }
+
+    public function delete($id)
+    {
+        $data = $this->db->delete('tb_user_sub_menu', array('id' => $id));
+        echo "Delete Success!!" . $data;
     }
 }

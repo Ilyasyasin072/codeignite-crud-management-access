@@ -15,7 +15,7 @@ class Auth extends CI_Controller
 			redirect('user');
 		}
 
-		
+
 		$this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email');
 		$this->form_validation->set_rules('password', 'Password', 'required|trim');
 
@@ -115,9 +115,9 @@ class Auth extends CI_Controller
 				'password' => password_hash($this->input->post('password1'), PASSWORD_DEFAULT),
 				'role_id' => 2,
 				'is_active' => 0
-			 ];
+			];
 
-			 //siapkan token
+			//siapkan token
 
 			$token = base64_encode(random_bytes(32));
 
@@ -141,37 +141,32 @@ class Auth extends CI_Controller
 	public function _sendEmail($token, $type)
 	{
 
-		//send to email untuk aktivasi
-		$email_send = '';
-		$password_send = '';
 		$config = [
 			'protocol' 	=> 'smtp',
 			'smtp_host' => 'ssl://smtp.googlemail.com',
-			'smtp_user' => $email_send,
-			'smtp_pass' => $password_send,
+			'smtp_user' => 'ilyasyasin2811@gmail.com',
+			'smtp_pass' => 'Combo123!@#',
 			'smtp_port' => 465,
 			'meiltype' 	=> 'html',
 			'charset' 	=> 'utf-8',
-			'newline' 	=> "\r\n"
+			'newline' 	=> "\r\n",
 		];
 
 		$this->load->library('email', $config);
 		$this->email->initialize($config);
 
-		$this->email->from($email_send, 'Management Access');
+		$this->email->from('ilyasyasin2811@gmail.com', 'Management Access');
 		$this->email->to($this->input->post('email'));
 
-		if($type == 'verify') {
+		if ($type == 'verify') {
 
-		$this->email->subject('Account Verification');
-		$link_verify = '<a href="'. base_url() . 'auth/verify?email=' . $this->input->post('email'). '&token='. urlencode($token) .'">Active</a>';
-		$this->email->message('click this link to verify account ' . $link_verify);
-
+			$this->email->subject('Account Verification');
+			$this->email->message('click this link to verify account : <a href="' . base_url() . 'auth/verify?email=' . $this->input->post('email') . '&token=' . $token . '">Active</a>');
 		}
 
 
 
-		if($this->email->send()){
+		if ($this->email->send()) {
 			return true;
 		} else {
 			echo $this->email->print_debugger();
@@ -185,10 +180,10 @@ class Auth extends CI_Controller
 		$token = $this->input->get('token');
 
 		$user = $this->db->get_where('tb_user', ['email' => $email])->row_array();
-		if($user) {
+		if ($user) {
 			$user_token = $this->db->get_where('tb_user_token', ['token' => $token])->row_array();
-			if($user_token) {
-				if(time() - $user_token['created_at'] < (60*60*24)) {
+			if ($user_token) {
+				if (time() - $user_token['created_at'] < (60 * 60 * 24)) {
 					$this->db->set('is_active', 1);
 					$this->db->where('email', $email);
 					$this->db->update('tb_user');
@@ -197,8 +192,8 @@ class Auth extends CI_Controller
 
 					$this->session->set_flashdata('massage', '
 					<div class="alert alert-success" role="alert">
-					'.$email.' has been activated please login!! </div>');
-					
+					' . $email . ' has been activated please login!! </div>');
+
 					redirect('auth');
 				} else {
 
@@ -208,25 +203,23 @@ class Auth extends CI_Controller
 					$this->session->set_flashdata('massage', '
 					<div class="alert alert-danger" role="alert">
 					Account Activation failed?: Token Expired </div>');
-					
+
 					redirect('auth');
 				}
-
 			} else {
 
-			$this->session->set_flashdata('massage', '
+				$this->session->set_flashdata('massage', '
 			<div class="alert alert-danger" role="alert">
 			Account Activation failed?: Wrong Email </div>');
-			
-			redirect('auth');
+
+				redirect('auth');
 			}
-		
 		} else {
 
 			$this->session->set_flashdata('massage', '
 			<div class="alert alert-danger" role="alert">
 			Account Activation failed?: </div>');
-			
+
 			redirect('auth');
 		}
 	}

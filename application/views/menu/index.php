@@ -10,6 +10,7 @@
             ); ?>
 
             <?= $this->session->flashdata('massage') ?>
+            <?= $this->session->flashdata('flash'); ?>
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card shadow mb-4">
@@ -25,18 +26,19 @@
                                         <tr>
                                             <th>#</th>
                                             <th>Menu</th>
-                                            <th>Actione</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php $i = 1; ?>
                                         <?php foreach ($tb_menu as $m) : ?>
-                                            <tr>
+                                            <tr id="<?= $m['id']; ?>">
                                                 <td><?= $i; ?></td>
                                                 <td><?= $m['nama_menu']; ?></td>
                                                 <td>
-                                                    <a href="#" class="badge badge-success">Edit</a>
-                                                    <a href="#" class="badge badge-danger">Delete</a>
+                                                    <input type="hidden" name="id" value="<?= $m['id']; ?>">
+                                                    <a href="<?= base_url(); ?>menu/ubahMenu/<?= $m['id']; ?>" class=" badge badge-success"><i class="fas fa-edit"></i></a>
+                                                    <a href="#" class="badge badge-danger remove-menu"><i class="fas fa-trash"></i></a>
                                                 </td>
                                             </tr>
                                             <?php $i++; ?>
@@ -79,4 +81,38 @@
                 </div>
             </div>
         </div>
+        <!-- End of Main Content -->
+
+
+        <!-- Button trigger modal -->
+        <!-- Modal -->
+        <?php foreach ($tb_menu as $i) :
+            $id = $i['id'];
+            $nama_menu = $i['nama_menu'];
+        ?>
+            <div class="modal fade" id="editMenu<?= $id; ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Add New Management</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form action="<?php echo base_url() . 'menu/ubahMenu/' . $id ?>" method="get">
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="formGroupExampleInput">Add New Menu</label>
+                                    <input type="text" class="form-control" id="nama_menu" name="nama_menu" value="<?= $nama_menu; ?>">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        <?php endforeach; ?>
         <!-- End of Main Content -->

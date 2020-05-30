@@ -166,7 +166,7 @@
                     </a>
                     <!-- Dropdown - User Information -->
                     <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                        <a class="dropdown-item" href="#">
+                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#profileMenu">
                             <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                             Profile
                         </a>
@@ -189,4 +189,36 @@
             </ul>
 
         </nav>
+
+        <div class="modal fade" id="profileMenu" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalCenterTitle">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="card-body">
+                                        <div class="card mb-3">
+                                            <img src="<?= base_url('assets/img/profile/') . $tb_user['image']; ?>" class="card-img-top" alt=" ...">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Card title</h5>
+                                                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- End of Topbar -->
